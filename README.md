@@ -1,3 +1,3 @@
 # HUNGERGAME
 
-Online Multiplayer Game
+MOBA Game implemented by Django
