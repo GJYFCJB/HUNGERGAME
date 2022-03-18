@@ -1,0 +1,23 @@
+
+{% load static %}   <!--查找并载入静态文件static的文件夹-->
+
+<head>
+        <!--引入jQuery的css-->
+            <link rel="stylesheet" href="https://cdn.acwing.com/static/jquery-ui-dist/jquery-ui.min.css">
+                <!--引入jQuery的js-->  
+                    <script src="https://cdn.acwing.com/static/jquery/js/jquery-3.3.1.min.js"></script>  
+                        <!--引入自己写的game.css-->
+                            <link rel="stylesheet" href="{% static 'css/game.css' %}">
+                                <!--引入自己写的game.js-->
+                                    <script src="{% static 'js/dist/game.js' %}"></script>
+</head>
+
+<body style="margin: 0">   
+        <div id="ac_game_01"></div> 
+            <script>
+                        $(document).ready(function(){      
+                                        let ac_game = new AcGame("ac_game_01");    
+                                    }); 
+    </script>
+</body>
+
