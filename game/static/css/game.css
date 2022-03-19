@@ -32,3 +32,10 @@
         transition: 200ms;
 }
 
+.ac-game-playground{
+    width:100%;
+    Height:100%;
+    user-select:none;
+
+}
+
