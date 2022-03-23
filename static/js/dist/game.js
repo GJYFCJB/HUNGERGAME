@@ -572,7 +572,7 @@ class Settings{
              </div>
        </div>
        <div class = "ac-game-settings-error-messages">
-            Password is not correct!
+          
        </div>
        <div class = "ac-game-settings-option">
             Sign up
@@ -580,6 +580,7 @@ class Settings{
        <br>
        <div class = "ac-game-settings-acwing">
             <img width = "30" src = "https://app1901.acapp.acwing.com.cn/static/image/settings/acwing_logo.png">
+            <br>
             <div>
                 Sign in with Google
             </div>
@@ -611,7 +612,6 @@ class Settings{
              </div>
        </div>
        <div class = "ac-game-settings-error-messages">
-            Password is not correct!
        </div>
        <div class = "ac-game-settings-option">
             Sign in
@@ -619,6 +619,7 @@ class Settings{
        <br>
        <div class = "ac-game-settings-acwing">
             <img width = "30" src = "https://app1901.acapp.acwing.com.cn/static/image/settings/acwing_logo.png">
+            <br>
             <div>
                 Sign in with Google
             </div>
@@ -640,8 +641,8 @@ class Settings{
         this.$register = this.$settings.find(".ac-game-settings-register");
 
         this.$register_username = this.$register.find(".ac-game-settings-username input");
-        this.$register_password = this.$register.find(".password-first");
-        this.$register_password_confirm = this.$register.find(".password-second");
+        this.$register_password = this.$register.find(".password-first input");
+        this.$register_password_confirm = this.$register.find(".password-second input");
         this.$register_submit = this.$register.find(".ac-game-settings-submit button");
         this.$register_error_message = this.$register.find(".ac-game-settings-error-message");
         this.$register_login = this.$register.find(".ac-game-settings-option");
@@ -722,7 +723,9 @@ class Settings{
         //register on the remote server
 	        let outer = this;
             let username = this.$register_username.val();
+            console.log(username);
             let password = this.$register_password.val();
+            console.log(password);
             let password_confirm = this.$register_password_confirm.val();
             this.$register_error_message.empty();
 
@@ -795,7 +798,7 @@ class Settings{
                     outer.username = resp.username;
                     outer.photo = resp.photo;
                     outer.hide();
-                    outer.root.menu.show;
+                    outer.root.menu.show();
                 }else{
                      outer.login();
                 }
@@ -821,8 +824,9 @@ export class AcGame{
         this.$ac_game = $('#' + id);
         //to identify which client side the game use
         this.AcWingOS = AcWingOS;
-        this.settings = new Settings(this);
         this.menu = new AcGameMenu(this);
+        this.settings = new Settings(this);
+
         this.playground = new AcGamePlayground(this);
 
         this.start();

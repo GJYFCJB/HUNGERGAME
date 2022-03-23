@@ -4,8 +4,9 @@ export class AcGame{
         this.$ac_game = $('#' + id);
         //to identify which client side the game use
         this.AcWingOS = AcWingOS;
-        this.settings = new Settings(this);
         this.menu = new AcGameMenu(this);
+        this.settings = new Settings(this);
+
         this.playground = new AcGamePlayground(this);
 
         this.start();
