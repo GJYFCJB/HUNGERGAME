@@ -9,6 +9,19 @@ class AcGameObject{
 
         this.has_called_start = false; // if executed start function
         this.timedelta = 0; //the time interval between this page and last page
+        this.uuid = this.create_uuid();
+
+    
+    }
+
+    //create unique id for each object
+    create_uuid(){
+        let res = "";
+        for(let i = 0; i < 15; i++){
+            let x = parseInt(Math.floor(Math.random() * 10));
+            res += x;
+        }
+        return res;
     }
 
     start(){ //only execute at the first page
