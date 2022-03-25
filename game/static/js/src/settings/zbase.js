@@ -29,7 +29,7 @@ class Settings{
              </div>
        </div>
        <div class = "ac-game-settings-error-messages">
-          
+
        </div>
        <div class = "ac-game-settings-option">
             Sign up
@@ -147,7 +147,7 @@ class Settings{
 
     login_on_remote(){
         //login in the remote server
-	    let outer = this;
+        let outer = this;
 
         let username = this.$login_username.val(); //
         let password = this.$login_password.val(); // 
@@ -162,7 +162,7 @@ class Settings{
                 password: password, 
             },
             success: function(resp){
-                console.log(resp); //
+
                 if (resp.result === "success")
                 {
                     location.reload(); // 
@@ -178,13 +178,13 @@ class Settings{
 
     register_on_remote(){
         //register on the remote server
-	        let outer = this;
-            let username = this.$register_username.val();
-            console.log(username);
-            let password = this.$register_password.val();
-            console.log(password);
-            let password_confirm = this.$register_password_confirm.val();
-            this.$register_error_message.empty();
+        let outer = this;
+        let username = this.$register_username.val();
+
+        let password = this.$register_password.val();
+
+        let password_confirm = this.$register_password_confirm.val();
+        this.$register_error_message.empty();
 
         $.ajax({
             url : "https://app1901.acapp.acwing.com.cn/settings/register/",
@@ -195,7 +195,7 @@ class Settings{
                 password_confirm: password_confirm,
             },
             success: function(resp){
-                console.log(resp);
+
                 if(resp.result === "success"){
                     location.reload(); //reload the page
                 }else{
@@ -209,23 +209,25 @@ class Settings{
 
     logout_on_remote(){
         //log out the remote server
-        if (this.platform === "ACAPP") return false; 
+        if (this.platform === "ACAPP"){
+            //the api for sign in with acwing 
+            // this.root.AcwingOs.api.window.close();
+            return false;
+        }else{
+            $.ajax({
+                url: "https://app1901.acapp.acwing.com.cn/settings/logout/", //
+                type: "GET",
+                success: function(resp){
 
-        $.ajax({
-            url: "https://app1901.acapp.acwing.com.cn/settings/logout/", //
-            type: "GET",
-            success: function(resp){
-                console.log(resp); // 
-                if (resp.result === "success")
-                {
-                    location.reload(); //
+                    if (resp.result === "success")
+                    {
+                        location.reload(); //
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
-
-    //open register page
     register(){
         //close login page -> open register page
         this.$login.hide();
@@ -250,14 +252,14 @@ class Settings{
                 platform: outer.platform,
             },
             success: function(resp){
-                console.log(resp);
+
                 if(resp.result === "success"){
                     outer.username = resp.username;
                     outer.photo = resp.photo;
                     outer.hide();
                     outer.root.menu.show();
                 }else{
-                     outer.login();
+                    outer.login();
                 }
             }
         });
@@ -266,7 +268,7 @@ class Settings{
 
     hide(){
         this.$settings.hide();
-        
+
     }
 
     show(){

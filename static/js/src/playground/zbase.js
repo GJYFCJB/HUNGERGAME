@@ -24,7 +24,7 @@ class AcGamePlayground{
 
     resize(){
         //extract the width and height -> get the unit to resize
-        console.log("resize");
+       
         this.width = this.$playground.width();
         this.height = this.$playground.height();
         let unit = Math.min(this.width / 16, this.height / 9);
@@ -45,9 +45,14 @@ class AcGamePlayground{
         this.width = this.$playground.width();
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
+        this.mode = mode;
+        this.state = "waiting"; //wait for the starting - > fighting after the player >=3 -> die -> over
+
+        this.notice_board = new NoticeBoard(this);
+        this.player_count = 0;
 
         this.resize();
-
+       
         this.players = [];
 
         this.players.push(new Player(this, this.width/2/this.scale,1/2, 0.05,"white",0.15, "me",this.root.settings.username, this.root.settings.photo));

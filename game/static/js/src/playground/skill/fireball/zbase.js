@@ -27,22 +27,33 @@ class FireBall extends AcGameObject{
             return false;
         }
 
+        this.update_move();
+        //we identify if attacked in one view instead of each view actually we identify if attacked in the attacker's view reason: need to synchroniztion
+        if(this.player.character !== "enemy"){
+            this.update_attack();
+        }
+
+
+        this.render();
+    }
+
+    update_move(){
         let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
-        
 
         this.x += this.vx * moved;
         this.y += this.vy * moved;
         this.move_length -= moved;
+    }
 
 
+    update_attack(){
         for(let i = 0; i < this.playground.players.length; i++){
             let player = this.playground.players[i];
             if(this.player !== player && this.is_collision(player)){
                 this.attack(player);
+                break;
             }
         }
-
-        this.render();
     }
 
  
@@ -63,6 +74,11 @@ class FireBall extends AcGameObject{
     attack(player){
         let angle = Math.atan2(player.y - this.y, player.x - this.x);
         player.is_attacked(angle, this.damage);
+
+        //call the attack method to send and receive info 
+        if(this.playground.mode === "multi mode"){
+            this.playground.mps.send_attack(player.uuid, player.x, player.y, angle, this.damage, this.uuid);
+        }
         this.destroy();
     }
 
@@ -75,6 +91,17 @@ class FireBall extends AcGameObject{
         this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
+    }
+
+    //destroy the balls of players before we destroy it from server
+    on_destroy(){
+        let fireballs = this.player.fireballs;
+        for(let i = 0; i < fireballs.length; i++){
+            if(fireballs[i] === this){
+                fireballs.splice(i,1);
+                break;
+            }
+        }
     }
 }
 
