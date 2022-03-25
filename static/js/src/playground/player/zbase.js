@@ -76,9 +76,10 @@ class Player extends AcGameObject{
             return false;
         });
 
+
         let canvas_mousedown = function(e){
             if(outer.playground.state !== "fighting")
-                return false;
+                return true;
 
             const rect = outer.ctx.canvas.getBoundingClientRect();
             //press left mouse -> realtive posotion
@@ -129,7 +130,19 @@ class Player extends AcGameObject{
 
         this.unbinded_funcs.push(unbind_canvas_mousedown);
 
+       
         let window_keydown_q = function(e){
+
+            if(e.which === 13){//enter
+                if(outer.playground.mode === "multi mode"){//open chat field
+                    outer.playground.chat_field.show_input();
+                    return false;
+                }
+            }else if(e.which === 27){
+                if(outer.playground.mode === "multi mode"){//close chat 
+                    outer.playground.chat_field.hide_input();
+                }
+            }
             //press 'Q' fireball
             if(outer.playground.state !== "fighting")
                 return true;
@@ -150,8 +163,9 @@ class Player extends AcGameObject{
             }
         }
 
-
-        $(window).keydown(window_keydown_q);
+        //need bind this listening to single view instead of window 
+        //$(window).keydown(window_keydown_q);
+        this.playground.game_map.$canvas.keydown(window_keydown_q);
 
         let unbind_window_keydown_q = () => {
                 $(window).unbind('keydown', window_keydown_q);

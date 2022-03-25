@@ -147,12 +147,90 @@ requestAnimationFrame(AC_GAME_ANIMATION);
 
 
 
+class ChatField{
+    
+    constructor(playground){
+        this.playground = playground;
+
+        this.$history = $(`<div class = "ac-game-chat-field-history">History:</div>`);
+        this.$input = $(`<input type="text" class = "ac-game-chat-field-input">`);
+
+        this.$history.hide();
+        this.$input.hide();
+        this.func_id = 0;
+
+        this.playground.$playground.append(this.$history);
+        this.playground.$playground.append(this.$input);
+        
+        this.start();
+    }
+
+    start(){
+        this.add_listening_events();
+    }
+
+    //listening esc 
+    add_listening_events(){
+        let outer = this;
+
+        this.$input.keydown(function(e){
+            if(e.which === 27){
+                outer.hide_input();
+                return false;
+            }else if (e.which === 13){
+                let username = outer.playground.root.settings.username;
+                let text = outer.$input.val();
+                if(text){
+                    //each time clear message
+                    outer.$input.val("");
+                    outer.add_message(username,text);
+                    outer.playground.mps.send_message(text);
+                }
+                return false;
+            }
+        });
+    }
+    
+    render_message(message){
+        return $(`<div>${message}</div>`);
+    }
+    add_message(username, text){
+        this.show_history();
+        let message = `[${username}]${text}`;
+        this.$history.append(this.render_message(message));
+        this.$history.scrollTop(this.$history[0].scrollHeight);
+
+    }
+    show_history(){
+        let outer = this; 
+        this.$history.fadeIn();
+
+        if(this.func_id) clearTimeout(this.func_id);
+//each time call the time, rem the id and clear so each time open the chat the history will show 3s
+        this.func_od = setTimeout(function(){
+            outer.$history.fadeOut();
+            outer.func_id = null;
+        },3000);
+    }
+
+    show_input(){
+        this.show_history();
+        this.$input.show();
+        this.$input.focus();
+    }
+
+    hide_input(){
+        this.$input.hide();
+        this.playground.game_map.$canvas.focus();
+    }
+}
 class GameMap extends AcGameObject{
     constructor(playground){
         //create canvasmap of this game parameter -> playground cause the szie will be same
         super();
         this.playground = playground;
-        this.$canvas = $(`<canvas></canvas>`);
+        //tabindex to add listening
+        this.$canvas = $(`<canvas tabindex=0></canvas>`); 
         this.ctx = this.$canvas[0].getContext(`2d`);
         this.ctx.canvas.width = this.playground.width;
         this.ctx.canvas.height = this.playground.height;
@@ -160,6 +238,8 @@ class GameMap extends AcGameObject{
     }    
 
     start(){
+        //focus method
+        this.$canvas.focus();
     }
 
     update(){
@@ -339,9 +419,10 @@ class Player extends AcGameObject{
             return false;
         });
 
+
         let canvas_mousedown = function(e){
             if(outer.playground.state !== "fighting")
-                return false;
+                return true;
 
             const rect = outer.ctx.canvas.getBoundingClientRect();
             //press left mouse -> realtive posotion
@@ -392,7 +473,19 @@ class Player extends AcGameObject{
 
         this.unbinded_funcs.push(unbind_canvas_mousedown);
 
+       
         let window_keydown_q = function(e){
+
+            if(e.which === 13){//enter
+                if(outer.playground.mode === "multi mode"){//open chat field
+                    outer.playground.chat_field.show_input();
+                    return false;
+                }
+            }else if(e.which === 27){
+                if(outer.playground.mode === "multi mode"){//close chat 
+                    outer.playground.chat_field.hide_input();
+                }
+            }
             //press 'Q' fireball
             if(outer.playground.state !== "fighting")
                 return true;
@@ -413,8 +506,9 @@ class Player extends AcGameObject{
             }
         }
 
-
-        $(window).keydown(window_keydown_q);
+        //need bind this listening to single view instead of window 
+        //$(window).keydown(window_keydown_q);
+        this.playground.game_map.$canvas.keydown(window_keydown_q);
 
         let unbind_window_keydown_q = () => {
                 $(window).unbind('keydown', window_keydown_q);
@@ -805,6 +899,8 @@ class MultiPlayerSocket{
                 outer.receive_shoot_fireball(uuid, data.tx, data.ty, data.ball_uuid);
             }else if(event === "blink"){
                 outer.receive_blink(uuid,data.tx,data.ty);
+            }else if(event === "message"){
+                outer.receive_message(uuid,data.text);
             }
         }
     }
@@ -932,6 +1028,21 @@ class MultiPlayerSocket{
     }
     
 
+    send_message(text){
+        let outer = this;
+        this.ws.send(JSON.stringify({
+            'event': "message",
+            'uuid' : outer.uuid,
+            'text' : text,
+        }));
+    }
+
+    receive_message(uuid,text){
+        let player = this.get_player(uuid);
+        if(player){
+            player.playground.chat_field.add_message(player.username, text);
+        }
+    }
 
 }
 class AcGamePlayground{
@@ -998,6 +1109,7 @@ class AcGamePlayground{
                 this.players.push(new Player(this, this.width/2/this.scale,1/2,0.05,this.get_random_color(),0.15, "robot"));
             }
         }else if (mode === "multi mode"){
+            this.chat_field = new ChatField(this);
             //create Websocket
             this.mps = new MultiPlayerSocket(this);
             this.mps.uuid = this.players[0].uuid;

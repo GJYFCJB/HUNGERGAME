@@ -3,7 +3,8 @@ class GameMap extends AcGameObject{
         //create canvasmap of this game parameter -> playground cause the szie will be same
         super();
         this.playground = playground;
-        this.$canvas = $(`<canvas></canvas>`);
+        //tabindex to add listening
+        this.$canvas = $(`<canvas tabindex=0></canvas>`); 
         this.ctx = this.$canvas[0].getContext(`2d`);
         this.ctx.canvas.width = this.playground.width;
         this.ctx.canvas.height = this.playground.height;
@@ -11,6 +12,8 @@ class GameMap extends AcGameObject{
     }    
 
     start(){
+        //focus method
+        this.$canvas.focus();
     }
 
     update(){

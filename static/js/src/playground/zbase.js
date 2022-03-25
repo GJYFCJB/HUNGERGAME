@@ -62,6 +62,7 @@ class AcGamePlayground{
                 this.players.push(new Player(this, this.width/2/this.scale,1/2,0.05,this.get_random_color(),0.15, "robot"));
             }
         }else if (mode === "multi mode"){
+            this.chat_field = new ChatField(this);
             //create Websocket
             this.mps = new MultiPlayerSocket(this);
             this.mps.uuid = this.players[0].uuid;
