@@ -4,7 +4,7 @@ class MultiPlayerSocket{
             this.playground = playground;
             
             //must be same as game.rouuting.py's route
-            this.ws = new WebSocket("wss://app1901.acapp.acwing.com.cn/wss/multiplayer/");
+            this.ws = new WebSocket("wss://hungerplay.com/wss/multiplayer/");
             
             this.start();
 

@@ -868,7 +868,7 @@ class MultiPlayerSocket{
             this.playground = playground;
             
             //must be same as game.rouuting.py's route
-            this.ws = new WebSocket("wss://app1901.acapp.acwing.com.cn/wss/multiplayer/");
+            this.ws = new WebSocket("wss://hungerplay.com/wss/multiplayer/");
             
             this.start();
 
@@ -1165,7 +1165,7 @@ class Settings{
        </div>
        <br>
        <div class = "ac-game-settings-acwing">
-            <img width = "30" src = "https://app1901.acapp.acwing.com.cn/static/image/settings/acwing_logo.png">
+            <img width = "30" src = "https://hungerplay.com/static/image/settings/acwing_logo.png">
             <br>
             <div>
                 Sign in with Google
@@ -1204,7 +1204,7 @@ class Settings{
        </div>
        <br>
        <div class = "ac-game-settings-acwing">
-            <img width = "30" src = "https://app1901.acapp.acwing.com.cn/static/image/settings/acwing_logo.png">
+            <img width = "30" src = "https://hungerplay.com/static/image/settings/acwing_logo.png">
             <br>
             <div>
                 Sign in with Google
@@ -1284,7 +1284,7 @@ class Settings{
         this.$login_error_message.empty(); // 
 
         $.ajax({
-            url: "https://app1901.acapp.acwing.com.cn/settings/login/", // 
+            url: "https://hungerplay.com/settings/login/", //
             type: "GET",
             data: {
                 username: username, // 
@@ -1316,7 +1316,7 @@ class Settings{
         this.$register_error_message.empty();
 
         $.ajax({
-            url : "https://app1901.acapp.acwing.com.cn/settings/register/",
+            url : "https://hungerplay.com/settings/register/",
             type: "GET",
             data: {
                 username : username,
@@ -1344,7 +1344,7 @@ class Settings{
             return false;
         }else{
             $.ajax({
-                url: "https://app1901.acapp.acwing.com.cn/settings/logout/", //
+                url: "https://hungerplay.com/settings/logout/", //
                 type: "GET",
                 success: function(resp){
 
@@ -1374,7 +1374,7 @@ class Settings{
         let outer = this;
 
         $.ajax({
-            url : "https://app1901.acapp.acwing.com.cn/settings/getinfo/",
+            url : "https://hungerplay.com/settings/getinfo/",
 
             typr: "GET",
             data : {
